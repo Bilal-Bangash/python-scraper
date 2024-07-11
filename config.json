@@ -65,7 +65,7 @@
     "nextPageDisabled": "nav[aria-label='Pagination'] li.disabled"
   },
   "nordstromrack": {
-    "urlTemplate": "https://www.nordstromrack.com/shop?search={searchQuery}&page={page}",
+    "urlTemplate": "https://www.nordstromrack.com/search?origin=keywordsearch&keyword={searchQuery}",
     "selectors": {
       "mainContainer": "div#main-content",
       "productContainer": "div.product-grid-item",
