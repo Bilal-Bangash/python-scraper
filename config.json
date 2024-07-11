@@ -1,0 +1,40 @@
+{
+  "amazon": {
+    "urlTemplate": "https://www.amazon.com/s?k={searchQuery}&page={page}",
+    "selectors": {
+      "mainContainer": "div.s-main-slot",
+      "productContainer": "div.s-main-slot > div[data-component-type='s-search-result']",
+      "title": "h2 a span",
+      "price": ".a-price > .a-offscreen",
+      "link": "h2 a",
+      "image": "img.s-image"
+    },
+    "baseUrl": "https://www.amazon.com",
+    "nextPageDisabled": "li.a-disabled"
+  },
+  "macys": {
+    "urlTemplate": "https://www.macys.com/shop/featured/clothing",
+    "selectors": {
+      "mainContainer": "div.cell",
+      "productContainer": "ul.items",
+      "title": "div.productDetail > div.productDescription > a",
+      "price": "div.productDetail > div.productDescription > div.priceInfo > span.price",
+      "link": "div.productDetail > div.productDescription > a",
+      "image": "div.productThumbnail >div.productThumbnailImage > a > div > picture > img"
+    },
+    "baseUrl": "https://www.macys.com",
+    "nextPageDisabled": "li.a-disabled"
+  },
+  "etsy": {
+    "urlTemplate": "https://www.etsy.com/search?q={searchQuery}&page={page}",
+    "selectors": {
+      "mainContainer": "div[data-search-results-container]",
+      "productContainer": "li.wt-list-unstyled",
+      "title": ".v2-listing-card__title",
+      "price": ".n-listing-card__price .currency-value",
+      "link": "a.listing-link",
+      "image": ".v2-listing-card__img img"
+    },
+    "nextPageDisabled": "nav[aria-label='Pagination'] li.disabled"
+  }
+}
