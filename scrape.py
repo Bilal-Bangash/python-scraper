@@ -9,7 +9,7 @@ def random_delay():
     time.sleep(random.uniform(1, 5))
 
 # Main scraping function
-def scrape_amazon(search_query, num_pages=1):
+def scrape_amazon(search_query, num_pages=5):
     results = []
     base_url = "https://www.amazon.com/s"
 
@@ -49,7 +49,9 @@ def save_to_json(data, filename):
 
 # Example usage
 search_query = "laptop"
-results = scrape_amazon(search_query, num_pages=3)
+results = scrape_amazon(search_query, num_pages=5)
+# print length of results
+print('length of results.....',len(results))
 
 # Save results to a JSON file
 save_to_json(results, 'amazon_results.json')
