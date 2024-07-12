@@ -89,5 +89,31 @@
     },
     "baseUrl": "https://www.kohls.com",
     "nextPageDisabled": "li.a-disabled"
+  },
+  "alphainsutries": {
+    "urlTemplate": "https://www.alphaindustries.com/search?q={searchQuery}",
+    "selectors": {
+      "mainContainer": "div.ais-hits-container",
+      "productContainer": "ol.ais-Hits-list",
+      "title": "p.ais-hit--title a",
+      "price": "p.ais-hit--price span",
+      "link": "p.ais-hit--title a",
+      "image": "div.ais-hit--picture"
+    },
+    "baseUrl": "https://www.alphaindustries.com",
+    "nextPageDisabled": "li.a-disabled"
+  },
+  "pocnyc": {
+    "urlTemplate": "https://pocnyc.com/search?type=product&options%5Bprefix%5D=last&q={searchQuery}",
+    "selectors": {
+      "mainContainer": "div.collection-grid__wrapper",
+      "productContainer": "div.grid__item",
+      "title": "div.grid-product__title",
+      "price": "div.grid-product__price span.grid-product__price--original",
+      "link": "a.grid-product__link",
+      "image": "img.lazyautosizes"
+    },
+    "baseUrl": "https://pocnyc.com",
+    "nextPageDisabled": "li.a-disabled"
   }
 }
