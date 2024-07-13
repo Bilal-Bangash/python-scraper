@@ -115,5 +115,18 @@
     },
     "baseUrl": "https://pocnyc.com",
     "nextPageDisabled": "li.a-disabled"
+  },
+  "lulus": {
+    "urlTemplate": "https://www.lulus.com/searchresults?_csrf=v3UOUPe3-NeQH9waYnOXBtdGJ1D87ik3p58M&q={searchQuery}",
+    "selectors": {
+      "mainContainer": "div.c-cat-main",
+      "productContainer": "div.c-cat__prod-grid",
+      "title": "h2.c-ptf__name",
+      "price": "div.c-ptf__pb-item",
+      "link": "a.c-ptf__info",
+      "image": "div.js-c-prod__img img"
+    },
+    "baseUrl": "https://www.lulus.com",
+    "nextPageDisabled": "li.a-disabled"
   }
 }

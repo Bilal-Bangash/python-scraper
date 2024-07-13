@@ -31,6 +31,7 @@ def scrape_website(config, website, search_query, num_pages=5):
             page.goto(url)
             
             content = page.content()
+            print('content',content)
             soup = BeautifulSoup(content, 'html.parser')
             
             product_containers = soup.select(selectors["productContainer"])
@@ -117,6 +118,11 @@ config = load_config('config.json')
 # save_to_json(alpha_industries_results, 'alpha_industries_results.json')
 
 # Scrape POC NYC
-pocnyc_results = scrape_website(config, 'pocnyc', 'jeans', num_pages=5)
-print('Length of POC NYC results:', len(pocnyc_results))
-save_to_json(pocnyc_results, 'pocnyc_results.json')
+# pocnyc_results = scrape_website(config, 'pocnyc', 'jeans', num_pages=5)
+# print('Length of POC NYC results:', len(pocnyc_results))
+# save_to_json(pocnyc_results, 'pocnyc_results.json')
+
+# Scrape POC NYC
+lulus_results = scrape_website(config, 'lulus', 'jeans', num_pages=1)
+print('Length of lulus results:', len(lulus_results))
+save_to_json(lulus_results, 'lulus_results.json')
