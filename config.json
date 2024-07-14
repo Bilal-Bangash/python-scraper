@@ -12,29 +12,82 @@
     "baseUrl": "https://www.amazon.com",
     "nextPageDisabled": "li.a-disabled"
   },
-  "macys": {
-    "urlTemplate": "https://www.macys.com/shop/featured/clothing",
+  "nordstrom": {
+    "urlTemplate": "https://www.nordstrom.com/sr?origin=keywordsearch&keyword={searchQuery}&page={page}",
     "selectors": {
-      "mainContainer": "div.cell",
-      "productContainer": "ul.items",
-      "title": "div.productDetail > div.productDescription > a",
-      "price": "div.productDetail > div.productDescription > div.priceInfo > span.price",
-      "link": "div.productDetail > div.productDescription > a",
-      "image": "div.productThumbnail >div.productThumbnailImage > a > div > picture > img"
+      "mainContainer": "div#root",
+      "productContainer": "div[data-component-type='ProductGrid'] > div",
+      "title": "span[data-component-type='ProductCard__Title']",
+      "price": "span[data-component-type='ProductCard__Price']",
+      "link": "a[data-component-type='ProductCard__ImageLink']",
+      "image": "img[data-component-type='ProductCard__Image']"
     },
-    "baseUrl": "https://www.macys.com",
+    "baseUrl": "https://www.nordstrom.com",
+    "nextPageDisabled": "div.pagination a.disabled"
+  },
+  "asos": {
+    "urlTemplate": "https://www.asos.com/us/search/?q={searchQuery}&page={page}",
+    "selectors": {
+      "mainContainer": "div[data-auto-id='productList']",
+      "productContainer": "article._2qG85dG",
+      "title": "h2._0XaG8Yx",
+      "price": "span._16nzq18",
+      "link": "a._3TqU78D",
+      "image": "img._3Vmezpe"
+    },
+    "baseUrl": "https://www.asos.com",
+    "nextPageDisabled": "nav[aria-label='Pagination'] li.disabled"
+  },
+  "hm": {
+    "urlTemplate": "https://www2.hm.com/en_us/search-results.html?q={searchQuery}&page-size=30&page={page}",
+    "selectors": {
+      "mainContainer": "div#search-results",
+      "productContainer": "li.product-item",
+      "title": "a.link",
+      "price": "span.price",
+      "link": "a.link",
+      "image": "img.product-item-image"
+    },
+    "baseUrl": "https://www2.hm.com",
     "nextPageDisabled": "li.a-disabled"
   },
-  "etsy": {
-    "urlTemplate": "https://www.etsy.com/search?q={searchQuery}&page={page}",
+  "uniqlo": {
+    "urlTemplate": "https://www.uniqlo.com/us/en/search?q={searchQuery}&p={page}",
     "selectors": {
-      "mainContainer": "div[data-search-results-container]",
-      "productContainer": "li.wt-list-unstyled",
-      "title": ".v2-listing-card__title",
-      "price": ".n-listing-card__price .currency-value",
-      "link": "a.listing-link",
-      "image": ".v2-listing-card__img img"
+      "mainContainer": "div.search-result-content",
+      "productContainer": "div.product",
+      "title": "div.product-name a",
+      "price": "div.product-price",
+      "link": "div.product-name a",
+      "image": "img.product-img"
     },
+    "baseUrl": "https://www.uniqlo.com",
     "nextPageDisabled": "nav[aria-label='Pagination'] li.disabled"
+  },
+  "nordstromrack": {
+    "urlTemplate": "https://www.nordstromrack.com/search?origin=keywordsearch&keyword={searchQuery}",
+    "selectors": {
+      "mainContainer": "div#main-content",
+      "productContainer": "div.product-grid-item",
+      "title": "a.product-title",
+      "price": "span.product-price",
+      "link": "a.product-title",
+      "image": "img.product-image"
+    },
+    "baseUrl": "https://www.nordstromrack.com",
+    "nextPageDisabled": "li.a-disabled"
+  },
+  "kohls": {
+    "urlTemplate": "https://www.kohls.com/search.jsp?submit-search=web-regular&search={searchQuery}&pageNumber={page}",
+    "selectors": {
+      "mainContainer": "div#main",
+      "productContainer": "div.product-card",
+      "title": "a.product-title",
+      "price": "span.product-price",
+      "link": "a.product-title",
+      "image": "img.product-image"
+    },
+    "baseUrl": "https://www.kohls.com",
+    "nextPageDisabled": "li.a-disabled"
   }
 }
