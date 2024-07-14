@@ -8,93 +8,62 @@ import json
 def random_delay():
     time.sleep(random.uniform(1, 5))
 
-# Function to scrape a page with Playwright
-def scrape_page(url, selectors):
+# Function to load the configuration from a JSON file
+def load_config(filename):
+    with open(filename, 'r') as file:
+        config = json.load(file)
+    return config
+
+# Generic scraping function
+def scrape_website(config, website, search_query, num_pages=5):
+    results = []
+    site_config = config[website]
+    base_url = site_config["baseUrl"]
+    url_template = site_config["urlTemplate"]
+    selectors = site_config["selectors"]
+
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(url)
-        content = page.content()
-        print(content)
-        soup = BeautifulSoup(content, 'html.parser')
+        
+        for page_num in range(1, num_pages + 1):
+            url = url_template.format(searchQuery=search_query, page=page_num)
+            page.goto(url)
+            
+            content = page.content()
+            soup = BeautifulSoup(content, 'html.parser')
+            
+            product_containers = soup.select(selectors["productContainer"])
+            if not product_containers:
+                print(f"No products found on page {page_num}")
+                break
+            
+            for container in product_containers:
+                title_element = container.select_one(selectors["title"])
+                price_element = container.select_one(selectors["price"])
+                link_element = container.select_one(selectors["link"])
+                image_element = container.select_one(selectors["image"])
+
+                title = title_element.get_text(strip=True) if title_element else 'N/A'
+                price = price_element.get_text(strip=True) if price_element else 'N/A'
+                link = base_url + link_element["href"] if link_element else 'N/A'
+                
+                # Check if the image is in an img tag or a style attribute
+                image_url = 'N/A'
+                if image_element:
+                    if image_element.name == 'img':
+                        image_url = image_element.get('src', 'N/A')
+                    elif image_element.get("style"):
+                        image_style = image_element.get("style")
+                        if "url('" in image_style:
+                            image_url = image_style.split("url('")[1].split("')")[0]
+                
+                results.append({'title': title, 'price': price, 'link': link, 'image': image_url})
+            
+            random_delay()
+        
         browser.close()
-    return soup
-
-# Function to scrape Macy's
-def scrape_macys(num_pages=1):
-    results = []
-    config = {
-        "urlTemplate": "https://www.macys.com/shop/featured/clothing",
-        "selectors": {
-            "mainContainer": "div.cell",
-            "productContainer": "ul.items",
-            "title": "div.productDetail > div.productDescription > a",
-            "price": "div.productDetail > div.productDescription > div.priceInfo > span.price",
-            "link": "div.productDetail > div.productDescription > a",
-            "image": "div.productThumbnail >div.productThumbnailImage > a > div > picture > img"
-        },
-        "baseUrl": "https://www.macys.com",
-        "nextPageDisabled": "li.a-disabled"
-    }
-    url_template = config['urlTemplate']
-    selectors = config['selectors']
-
-    for page_num in range(1, num_pages + 1):
-        url = url_template
-        soup = scrape_page(url, selectors)
-
-        product_containers = soup.select(selectors['productContainer'])
-        if not product_containers:
-            print(f"No products found on page {page_num}")
-            break
-
-        for container in product_containers:
-            title = container.select_one(selectors['title']).get_text(strip=True)
-            price = container.select_one(selectors['price']).get_text(strip=True) if container.select_one(selectors['price']) else 'N/A'
-            link = config['baseUrl'] + container.select_one(selectors['link'])['href']
-            image = container.select_one(selectors['image'])['src']
-            results.append({'title': title, 'price': price, 'link': link, 'image': image})
-
-        random_delay()
-
-    return results
-
-# Function to scrape Etsy
-def scrape_etsy(search_query, num_pages=1):
-    results = []
-    config = {
-        "urlTemplate": "https://www.etsy.com/search?q={searchQuery}&page={page}",
-        "selectors": {
-            "mainContainer": "div[data-search-results-container]",
-            "productContainer": "li.wt-list-unstyled",
-            "title": ".v2-listing-card__title",
-            "price": ".n-listing-card__price .currency-value",
-            "link": "a.listing-link",
-            "image": ".v2-listing-card__img img"
-        },
-        "nextPageDisabled": "nav[aria-label='Pagination'] li.disabled"
-    }
-    url_template = config['urlTemplate']
-    selectors = config['selectors']
-
-    for page_num in range(1, num_pages + 1):
-        url = url_template.format(searchQuery=search_query, page=page_num)
-        soup = scrape_page(url, selectors)
-
-        product_containers = soup.select(selectors['productContainer'])
-        if not product_containers:
-            print(f"No products found on page {page_num}")
-            break
-
-        for container in product_containers:
-            title = container.select_one(selectors['title']).get_text(strip=True)
-            price = container.select_one(selectors['price']).get_text(strip=True) if container.select_one(selectors['price']) else 'N/A'
-            link = container.select_one(selectors['link'])['href']
-            image = container.select_one(selectors['image'])['src']
-            results.append({'title': title, 'price': price, 'link': link, 'image': image})
-
-        random_delay()
-
+    
     return results
 
 # Function to save results to a JSON file
@@ -103,15 +72,51 @@ def save_to_json(data, filename):
         json.dump(data, json_file, indent=4)
 
 # Example usage
-macys_results = scrape_macys(num_pages=1)
-save_to_json(macys_results, 'macys_results.json')
+config = load_config('config.json')
 
-etsy_results = scrape_etsy(search_query='handmade necklace', num_pages=3)
-save_to_json(etsy_results, 'etsy_results.json')
+# Scrape Amazon
+# amazon_results = scrape_website(config, 'amazon', 'clothing', num_pages=5)
+# print('Length of Amazon results:', len(amazon_results))
+# save_to_json(amazon_results, 'amazon_results.json')
 
-# Print results
-for result in macys_results:
-    print(result)
+# # Scrape Nordstrom
+# nordstrom_results = scrape_website(config, 'nordstrom', 'dress', num_pages=5)
+# print('Length of Nordstrom results:', len(nordstrom_results))
+# save_to_json(nordstrom_results, 'nordstrom_results.json')
 
-for result in etsy_results:
-    print(result)
+# # Scrape ASOS
+# asos_results = scrape_website(config, 'asos', 'jeans', num_pages=5)
+# print('Length of ASOS results:', len(asos_results))
+# save_to_json(asos_results, 'asos_results.json')
+
+# # Scrape H&M
+# hm_results = scrape_website(config, 'hm', 'dress', num_pages=5)
+# print('Length of H&M results:', len(hm_results))
+# save_to_json(hm_results, 'hm_results.json')
+
+# # # Scrape Uniqlo
+# # uniqlo_results = scrape_website(config, 'uniqlo', 'jeans', num_pages=5)
+# # print('Length of Uniqlo results:', len(uniqlo_results))
+# # save_to_json(uniqlo_results, 'uniqlo_results.json')
+
+
+# # Scrape Nordstrom Rack
+# nordstrom_rack_results = scrape_website(config, 'nordstromrack', 'shoes', num_pages=5)
+# print('Length of Nordstrom Rack results:', len(nordstrom_rack_results))
+# save_to_json(nordstrom_rack_results, 'nordstrom_rack_results.json')
+
+# # Scrape Kohl's
+# kohls_results = scrape_website(config, 'kohls', 'dress', num_pages=5)
+# print('Length of Kohl\'s results:', len(kohls_results))
+# save_to_json(kohls_results, 'kohls_results.json')
+
+
+# Scrape Alpha Industries
+# alpha_industries_results = scrape_website(config, 'alphainsutries', 'jeans', num_pages=5)
+# print('Length of Alpha Industries results:', len(alpha_industries_results))
+# save_to_json(alpha_industries_results, 'alpha_industries_results.json')
+
+# Scrape POC NYC
+pocnyc_results = scrape_website(config, 'pocnyc', 'jeans', num_pages=5)
+print('Length of POC NYC results:', len(pocnyc_results))
+save_to_json(pocnyc_results, 'pocnyc_results.json')
